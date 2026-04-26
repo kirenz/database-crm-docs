@@ -6,9 +6,8 @@ data generator itself lives in a separate, private repository.
 
 > **What is this?** A Postgres database with realistic CRM data —
 > 1,500 companies, 7,000 sales opportunities, 40,000 activities, and more.
-> It's hosted online so **you don't need to install Postgres or Docker
-> yourself**. You just point a SQL client at it from your laptop and run
-> queries.
+> It's hosted online so **you don't need to install Postgres yourself**.
+> You just point a SQL client at it from your laptop and run queries.
 
 ## Connection details
 
@@ -72,19 +71,17 @@ need the *client* — not a full Postgres server.
   Don't have `brew` yet? It's the standard macOS package manager —
   follow the one-line install at [brew.sh](https://brew.sh/).
 
-* **Linux or WSL:**
-  ```bash
-  sudo apt install postgresql-client
-  ```
+* **Windows:**
+  Download the official
+  [PostgreSQL installer](https://www.postgresql.org/download/windows/),
+  run it, and during the component selection step pick **"Command Line
+  Tools"** only — you can untick everything else, since the database itself
+  is hosted (you don't need a local Postgres server). After the install
+  finishes, close and reopen VS Code so it picks up the new `psql`
+  command on your `PATH`.
 
-* **Windows (no WSL):** Download the official
-  [PostgreSQL installer](https://www.postgresql.org/download/windows/) and
-  pick *"Command-line tools"* only during installation. Easier alternative:
-  install [**WSL2**](https://learn.microsoft.com/en-us/windows/wsl/install)
-  and use the Linux command above. WSL is a feature built into modern
-  Windows that lets you run a real Linux environment inside Windows —
-  most professional developers on Windows use it. Background reading:
-  [Microsoft's *What is WSL?*](https://learn.microsoft.com/en-us/windows/wsl/about).
+If neither option appeals, just skip Option B — Options A and C cover
+everything you need.
 
 **Run the test query.** Open VS Code's integrated terminal
 (menu *Terminal → New Terminal*, or press `` Ctrl+` ``  /  `` Cmd+` ``)
