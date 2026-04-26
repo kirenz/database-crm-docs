@@ -44,10 +44,21 @@ tables, running ad-hoc queries, and getting a feel for the schema.
    link.](https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-postgresql-client2)
 3. After install, a new **database icon** appears in the left sidebar.
    Click it → **"+ Create Connection"** → choose **PostgreSQL**.
-4. Fill in the values from your instructor's email (Host, Port, Username,
-   Password, Database = `crm`). Click **Connect**.
-5. You should see a tree of all 13 tables on the left. Right-click any
-   table → **"Select Top 1000"** to peek at the data, or right-click the
+4. The extension walks you through a series of prompts. Fill them in
+   **in this exact order**, using the values from your instructor's email:
+
+   1. **Host** — paste the host value from the email.
+   2. **User** — paste the user value.
+   3. **Password** — paste the password value.
+   4. **Port** — paste the port value.
+   5. **Use an ssl connection?** → choose **Standard Connection**.
+      The teaching database doesn't use SSL, so picking *Use Secure
+      Connection* will fail with *"server does not support SSL"*.
+   6. **Database** — `crm`.
+
+5. After the last prompt, the extension connects. You should see a tree of
+   all 13 tables on the left under `public`. Right-click any table →
+   **"Select Top 1000"** to peek at the data, or right-click the
    connection → **"New Query"** to write your own SQL.
 
 If the connection hangs or fails, see [Troubleshooting](#troubleshooting)
