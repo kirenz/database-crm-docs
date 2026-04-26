@@ -4,30 +4,120 @@ Companion docs for the hosted teaching CRM database used in HdM's
 text-to-SQL exercises. This repo is the **public schema reference**; the
 data generator itself lives in a separate, private repository.
 
-## Connect
+> **What is this?** A Postgres database with realistic CRM data —
+> 1,500 companies, 7,000 sales opportunities, 40,000 activities, and more.
+> It's hosted online so **you don't need to install Postgres or Docker
+> yourself**. You just point a SQL client at it from your laptop and run
+> queries.
 
-The database is hosted and read-only. Connection details (host, port, user,
-password) are shared separately by the instructor.
+## Connection details
 
-## Three ways to connect from VS Code
+The database is read-only and lives at a fixed address. Your instructor
+sends you the connection values (host, port, user, password) separately by
+email. The instructions below assume you have that email open in another
+tab.
 
-Use whichever feels most natural — they all hit the same database.
+Wherever you see `<host>`, `<port>`, `<user>`, `<password>` below, paste in
+the actual values from the email — don't type the angle brackets.
 
-### 1. Terminal + `psql` (simplest)
+## How to connect from VS Code
 
-If `psql` is installed (`brew install libpq` on macOS, `sudo apt install
-postgresql-client` on Linux/WSL):
+You'll likely use **two** of the three options below: one for *exploring*
+the data interactively (Option A or B), and one for *querying from Python*
+in your exercise files (Option C).
+
+If you've never used any of these tools before, that's fine — start with
+**Option A** (graphical, point-and-click), and add Option C once you're
+writing your first exercise.
+
+---
+
+### Option A — VS Code SQL extension *(recommended for exploring)*
+
+A graphical Postgres client that lives inside VS Code. Best for browsing
+tables, running ad-hoc queries, and getting a feel for the schema.
+
+1. Open VS Code → click the **Extensions** icon in the left sidebar (the
+   four-squares icon), or press `Ctrl+Shift+X` (Windows/Linux) /
+   `Cmd+Shift+X` (macOS).
+2. Search for **"PostgreSQL"** by *Chris Kolkman* and click *Install*.
+   [Direct marketplace
+   link.](https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-postgresql-client2)
+3. After install, a new **database icon** appears in the left sidebar.
+   Click it → **"+ Create Connection"** → choose **PostgreSQL**.
+4. Fill in the values from your instructor's email (Host, Port, Username,
+   Password, Database = `crm`). Click **Connect**.
+5. You should see a tree of all 13 tables on the left. Right-click any
+   table → **"Select Top 1000"** to peek at the data, or right-click the
+   connection → **"New Query"** to write your own SQL.
+
+If the connection hangs or fails, see [Troubleshooting](#troubleshooting)
+below.
+
+---
+
+### Option B — Terminal with `psql` *(quick CLI queries)*
+
+`psql` is the official command-line client for Postgres. It's the fastest
+way to fire off a one-line query without leaving the terminal. You only
+need the *client* — not a full Postgres server.
+
+**Install `psql`** (one-time setup):
+
+* **macOS:**
+  ```bash
+  brew install libpq
+  brew link --force libpq
+  ```
+  Don't have `brew` yet? It's the standard macOS package manager —
+  follow the one-line install at [brew.sh](https://brew.sh/).
+
+* **Linux or WSL:**
+  ```bash
+  sudo apt install postgresql-client
+  ```
+
+* **Windows (no WSL):** Download the official
+  [PostgreSQL installer](https://www.postgresql.org/download/windows/) and
+  pick *"Command-line tools"* only during installation. Easier alternative:
+  install [**WSL2**](https://learn.microsoft.com/en-us/windows/wsl/install)
+  and use the Linux command above. WSL is a feature built into modern
+  Windows that lets you run a real Linux environment inside Windows —
+  most professional developers on Windows use it. Background reading:
+  [Microsoft's *What is WSL?*](https://learn.microsoft.com/en-us/windows/wsl/about).
+
+**Run the test query.** Open VS Code's integrated terminal
+(menu *Terminal → New Terminal*, or press `` Ctrl+` ``  /  `` Cmd+` ``)
+and run:
 
 ```bash
 PGPASSWORD=<password> psql -h <host> -p <port> -U <user> -d crm \
   -c "SELECT COUNT(*) FROM accounts;"
 ```
 
-Expected output: **1500**.
+Expected output:
 
-### 2. Python via `uv` (no separate install)
+```
+ count
+-------
+  1500
+(1 row)
+```
 
-For querying from a script or notebook:
+---
+
+### Option C — Python via `uv` *(for the actual exercise files)*
+
+This is what you'll use *inside* your exercise scripts. You query the
+database with [`psycopg`](https://www.psycopg.org/) — the standard Postgres
+driver for Python.
+
+If you don't have `uv` yet, follow
+[**kirenz/uv-setup**](https://github.com/kirenz/uv-setup) first. `uv` is a
+fast, modern Python project manager that handles installs, virtual
+environments, and Python versions for you.
+
+**One-shot test, no project setup needed:**
 
 ```bash
 uv run --with "psycopg[binary]" python -c "
@@ -39,29 +129,76 @@ with psycopg.connect(
 "
 ```
 
-Expected output: `(1500,)`
+Expected output: `(1500,)`. The `(value,)` syntax is just how Python
+represents a single-row, single-column result — a *tuple of length one*.
 
-For your actual exercise files, add the dependency once with
-`uv add "psycopg[binary]"` and `import psycopg` as usual.
+**For your actual exercise project**, add the dependency once with `uv`,
+then `import psycopg` like any other library:
 
-### 3. VS Code SQL extension
+```bash
+cd /path/to/your/exercise/project
+uv add "psycopg[binary]"
+```
 
-Install **"PostgreSQL"** by Chris Kolkman from the VS Code Marketplace,
-then create a new connection with the values from the instructor. You get a
-sidebar tree of all tables, a query editor with autocomplete, and inline
-result tables — handy when you're exploring the schema.
+```python
+# exercise.py
+import psycopg
 
-## Quick test
+CONN = (
+    "host=<host> port=<port> dbname=crm "
+    "user=<user> password=<password>"
+)
 
-Pick any of the three methods above and run the count query. If you see
-**1500**, you're set. If anything fails — connection refused, timeout,
-weird error — message the instructor and we'll debug together. Don't stay
-stuck on setup.
+with psycopg.connect(CONN) as conn:
+    rows = conn.execute("""
+        SELECT industry, COUNT(*) AS n
+        FROM accounts
+        GROUP BY industry
+        ORDER BY n DESC
+    """).fetchall()
+    for industry, n in rows:
+        print(f"{industry:20s}  {n}")
+```
+
+Run it with `uv run python exercise.py`.
+
+---
+
+## Quick test — please do this once
+
+Pick whichever option above looks easiest, fill in the values from your
+instructor's email, and run the count query. If you see **`1500`**, you're
+all set up. 🎉
+
+## Troubleshooting
+
+If something doesn't work, just message your instructor — but try these
+checks first, since they cover 90% of issues.
+
+* **"Connection refused" / "Operation timed out"** — most likely a
+  firewall on your network. School and company networks often block
+  non-standard ports. Quick test: try from a different network (e.g.
+  your phone's hotspot). If it works there but not on the school WiFi,
+  let your instructor know.
+* **"FATAL: password authentication failed for user …"** — a typo. The
+  password is case-sensitive. Re-paste it carefully from the email and
+  make sure no trailing space sneaked in.
+* **VS Code extension hangs forever on "Connecting…"** — check Host and
+  Port are correct, and that you picked **PostgreSQL** (not MySQL or
+  another DB) when creating the connection.
+* **The Mermaid diagram on `erd.md` looks like raw text** — view it on
+  GitHub directly (the link below), not a local preview. GitHub renders
+  Mermaid automatically; most local Markdown previewers don't.
+
+When in doubt: copy the exact error message and reply to the instructor's
+email. Don't lose hours fighting setup — that's not the interesting part.
+
+---
 
 ## Schema
 
 * **[`erd.md`](erd.md)** — visual entity-relationship diagram + per-table
-  column reference. Mermaid renders directly on GitHub.
+  column reference. Open it on GitHub to see the diagram render.
 
 The 13 tables mirror the Salesforce standard-object model:
 
