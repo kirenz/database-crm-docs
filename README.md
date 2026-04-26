@@ -59,10 +59,19 @@ tables, running ad-hoc queries, and getting a feel for the schema.
       This is just the label that appears in the sidebar tree, so feel
       free to use something else if you prefer.
 
-5. After the last prompt, the extension connects. You should see a tree of
-   all 13 tables on the left under `public`. Right-click any table →
-   **"Select Top 1000"** to peek at the data, or right-click the
-   connection → **"New Query"** to write your own SQL.
+5. After the last prompt, the extension connects. To verify the data is
+   there, navigate the tree on the left:
+
+   1. In the **PostgreSQL Explorer** sidebar, click **CRM-Database** to
+      expand the connection.
+   2. Expand **crm** (the database).
+   3. Expand **public** (the schema). You should see all 13 tables.
+   4. **Right-click `accounts`** → hover **Select** → click
+      **Run Select Top 1000**.
+
+   A new tab opens showing 1000 rows of accounts. If you see that, the
+   connection works and you're ready to query. To write your own SQL,
+   right-click the connection and choose **New Query**.
 
 If the connection hangs or fails, see [Troubleshooting](#troubleshooting)
 below.
