@@ -55,9 +55,9 @@ tables, running ad-hoc queries, and getting a feel for the schema.
       The teaching database doesn't use SSL, so picking *Use Secure
       Connection* will fail with *"server does not support SSL"*.
    6. **Database** — `crm`.
-   7. **The display name of the database connection** — anything you like;
-      this is just the label in the sidebar. Something like `CRM` or
-      `CRM teaching DB` works fine.
+   7. **The display name of the database connection** — `CRM-Database`.
+      This is just the label that appears in the sidebar tree, so feel
+      free to use something else if you prefer.
 
 5. After the last prompt, the extension connects. You should see a tree of
    all 13 tables on the left under `public`. Right-click any table →
