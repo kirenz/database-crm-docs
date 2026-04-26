@@ -1,8 +1,8 @@
 # CRM Schema Reference
 
-Visual entity-relationship diagram and per-table column reference for the
-CRM teaching database. The Mermaid diagram below renders directly on
-GitHub — no tooling required.
+Visual entity-relationship diagram and per-table column reference for the CRM teaching database. The Mermaid diagram below renders directly on GitHub — no tooling required.
+
+_Last updated: 2026-04-25 09:36 UTC_
 
 ## Entity-relationship diagram
 
