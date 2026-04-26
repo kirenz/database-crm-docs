@@ -63,13 +63,21 @@ need the *client* — not a full Postgres server.
 
 **Install `psql`** (one-time setup):
 
-* **macOS:**
+* **macOS:** [Homebrew](https://brew.sh/) is the standard package manager
+  for macOS — it lets you install command-line tools with a single command.
+  If you don't have it yet, follow the one-line install on the homepage.
+  Then run these two commands in Terminal, **one at a time**:
+
   ```bash
   brew install libpq
+  ```
+
+  ```bash
   brew link --force libpq
   ```
-  Don't have `brew` yet? It's the standard macOS package manager —
-  follow the one-line install at [brew.sh](https://brew.sh/).
+
+  The first downloads `psql`; the second makes it findable on your `PATH`
+  so VS Code's terminal can call it by name.
 
 * **Windows:**
   Download the official
