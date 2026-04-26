@@ -6,23 +6,9 @@ itself lives in a separate, private repository.
 
 ## Connect
 
-```
-host     = 49.12.14.207
-port     = 55432
-database = crm
-user     = student
-password = student
-sslmode  = prefer
-```
-
-Read-only role. Works with any Postgres client (psql, DBeaver, TablePlus,
-DataGrip, pgAdmin, …). Quick check from a terminal:
-
-```bash
-PGPASSWORD=student psql -h 49.12.14.207 -p 55432 -U student -d crm \
-  -c "SELECT COUNT(*) FROM accounts;"
-# → 1500
-```
+The hosted database is read-only. Connection details (host, port, user,
+password) are shared separately by the instructor. Any standard Postgres
+client works: `psql`, DBeaver, TablePlus, DataGrip, pgAdmin, …
 
 ## Schema
 
